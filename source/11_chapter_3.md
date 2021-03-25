@@ -443,24 +443,67 @@ async def main():
 ```
 In the main() function, there are four created asyncio queues used for transferring items. They will be parameters passed to the other asynchronous functions. Besides, the asyncio.gather() will run capture(), keepget(), processing() and prediction() concurrently inside the main(). To conclude, main() acts as a kick starter of the program.
 
-
+<br>
 ```python
-async def capture(queue, win, canvas):
-    # cap = acapture.open(0)
+async def capture(q1, win, canvas):
     cap = cv2.VideoCapture(0)
-    # ret, frame = cap.read()
 
     while True:
+        # Frame capturing  
         ret, frame = cap.read()
         rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        filpedRGB = cv2.flip(rgb, 1)
-        # print("capture")
-        photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(filpedRGB))
+
+        # GUI design
+        photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(rgb))
         canvas.create_image(0, 0, image=photo, anchor=tkinter.NW)
         win.update()
-        await queue.put(rgb)
+
+        # Putting the rgb into the queue and waiting for the keepget() function to get it. 
+        await q1.put(rgb)
         await asyncio.sleep(0.00001)
 ```
+The main duty of capture() is keep capturing and transferring the converted rgb to keepget() function through the queue q1. Meanwhile, the rgb will be projected in GUI for the users to see whether their hands are inside the camera. 
+<br>
+
+```python
+async def keepget(q1, q2):
+    while True:
+        rgb = await q1.get()
+        # print("keepget",len(rgb))
+        await q2.put(rgb)
+        await asyncio.sleep(0.00001)
+```
+The asynchronous function keepget() will non-stop get the rgb from the shared queue q1 
+whenever the capture() puts the rgb into the q1. Then, it will pass the rgb to the processing(). In short, keepget() is like a transfer station. 
+<br>
+
+```python
+async def processing(q2, q3):
+
+    mp_drawing = mp.solutions.drawing_utils 
+
+    ...
+    
+    while True:
+
+        ...
+
+        rgb = await q2.get()
+
+        results = hands.process(cv2.flip(rgb,1))
+
+        unsortedList.append({'image': rgb,'hands':[{'classification':{'label':h.classification[0].label, 'index':h.classification[0].index}, 'floor':getGesture(h.classification[0].label, l.landmark), 'landmark':l.landmark[4]} for h, l in zip(results.multi_handedness, results.multi_hand_landmarks)]})
+
+        await q3.put(unsortedList)
+
+        await asyncio.sleep(0.00001)
+```
+In the processing() function, it will immediately pass the rgb gotten from the queue to the MediaPipe model to get the multi_handedness and multi_hand_landmarks. Also, in order to make the life easier, a unsortedList will be created. It stores the rgb frame, left or right hand, floor and the x, y, z coordinate of landmark[4]. The floor is the return value of getGesture() function. The logic of getGesture() is similar to the coding we mentioned before. It utilizes the multi_hand_landmarks to know the status of each fingers and then predict the floor number. 
+
+The processing() will send the unsortedList to prediction() for further prediction. 
+
+For instance, 
+
 
 
 
