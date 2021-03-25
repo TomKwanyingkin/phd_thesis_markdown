@@ -8,11 +8,9 @@ The initial and originally proposed solution is building a convolutional neural 
 
 #### The implementation of CNN: 
 
-First and foremost, preparing sufficient datasets for classes 0-9 to train and test the model. As mentioned in the introduction, datasets are the backbone of CNNs. It is necessary to prepare a sufficient amount of the training data to train the model and testing data to test the model first. If the model is well-trained, it can output the floor number precisely by feeding an image of gesture. Currently, each class will contain around 1300 images for training and 200 images for testing. 
+First and foremost, it is essential to prepare sufficient datasets for classes 0-9 to train and test the model. As mentioned in the introduction, datasets are the backbone of CNNs. It is necessary to prepare a enough training data to train the model and testing data to test the model. If the model is well-trained, it can output the floor number precisely by feeding an image of gesture. Currently, each class will contain around 1300 images for training and 200 images for testing. 
 
-After the preparation of the datasets, the next step will be building the infrastructure of CNNs by using Pytorch instead of using TensorFlow. The reason why is that its documentation is well organized and user-friendly for beginners and its syntax is similar to Python. 
-
-
+After the preparation of the datasets, the next step will be building the infrastructure of CNNs by using Pytorch. The documentation of Pytorch is well organized and user-friendly for beginners and its syntax is similar to Python. 
 ```python
 # import libraries
 import torch
@@ -88,7 +86,7 @@ model = Net() # create the model
 Then, the model will be created by multiple layers. Besides the last layer using the SoftMax function, the other layers will use the ReLu function as a non-linear activation function. Also, the dropout technique will be imposed for preventing overfitting. For easy understanding, the Fig.8 shows the graphical representation of the designed CNN.
 
 <center>
-<img  src="https://github.com/TomKwanyingkin/hiuraunt/blob/main/Picture32.png?raw=true"  /><br>
+<img  src="https://user-images.githubusercontent.com/56287097/112486704-17a2aa00-8db7-11eb-906c-4d7e165449f5.PNG"  /><br>
 Fig.8 Graphical Representation of CNN</center>
 <br>
 <br>
@@ -273,8 +271,8 @@ In the real world, the user in the lift just need to make and hold the hand gest
 <img  src="https://github.com/TomKwanyingkin/hiuraunt/blob/main/Picture22.png?raw=true" />
 
 <img  src="https://github.com/TomKwanyingkin/hiuraunt/blob/main/Picture23.png?raw=true" />
-<br>
-Fig.18 The document of annotation Fig.19 Real-world application</center>
+
+<p>Fig.18 The document of annotation   Fig.19 Real-world application</p></center>
 
 #### The implementation of MediaPipe (Multi-users’ hand gestures recognition mode): 
 
@@ -350,10 +348,13 @@ def sortXY(item1, item2):
         return 0
 ```
 <br>
-After that, a sorted_list would be returned by sortXY. It would be like [{“handedness”: left, “landmarks”: all the landmarks of Tom’s left hand},
+After that, a sorted_list would be returned by sortXY. It would be like 
+
+[{“handedness”: left, “landmarks”: all the landmarks of Tom’s left hand},
  {“handedness”: right, “landmarks”: all the landmarks of Tom’s right hand},
  {“handedness”: left, “landmarks”: all the landmarks of Ernest’s left hand},
  {“handedness”: right, “landmarks”: all the landmarks of Ernest’s right hand},]. 
+
 Remember that this approach will not know the landmarks belongs to whom, the order of the list just depends on  x, y coordinate. The above list is just for easy illustration. 
 
 Since the floor number can be obtained by knowing the landmarks of each hand, detectedRlist will be created and like:
@@ -396,14 +397,15 @@ Fig.26 Expected result of k-means clustering</center>
 
 In the beginning, the MediaPipe model will offer the coordinates of the landmarks after processing the input image. Then, a dictionary will store the result of multi_handedness and multi_hand_landmarks. After the sorting, a sorted_list would be produced as follows:
 
-         [{“handedness”: left, “landmarks”: all the landmarks of that hand},
-          {“handedness”: right, “landmarks”: all the landmarks of that hand},
-          {“handedness”: left, “landmarks”: all the landmarks of that hand}]
+                [{“handedness”: left, “landmarks”: all the landmarks of that hand},
+                 {“handedness”: right, “landmarks”: all the landmarks of that hand},
+                 {“handedness”: left, “landmarks”: all the landmarks of that hand}]
 
 Next, floor number represented by the gesture would be obtained based on the landmarks’ position. 
-{“handedness”: left, “gesture”: 3},
-{“handedness”: right, “gesture”: 2},
-{“handedness”: left, “gesture”: 5},].
+
+                            [{“handedness”: left, “gesture”: 3},
+                             {“handedness”: right, “gesture”: 2},
+                             {“handedness”: left, “gesture”: 5},]
 
 Finally, the gesture in the detectedRlist would be combining by the coding in Fig.34. Since the initial length of the list is three, it would enter the second if-statement. The detectedRlist[0][ “gesture”] would combine detectedRlist[1][ “gesture”] to produce a floor number which is 32nd floor as the detectedRlist[0] [ “handedness”] equals to “left” and the detectedRlist[1] [ “handedness”] equals to “right”. The list will be shortened to length 1 after the popping out. The last remaining element would be result which is 5th floor directly. In the end, the output of the floor number would be right.  
 
@@ -411,11 +413,58 @@ In conclusion, it is proven that the implementation of quick-sort method can dea
 
 #### The implementation of MediaPipe (GUI version): 
 
-To consummate the application, it is necessary to design the GUI for the gesture recognition. To make the GUI operatable, the whole programming structure of the previous two modes needs to be restructured since they are not well-organized, and the processes are not running concurrently. During the reconstruction, the concurrency would be accomplished by coroutine and asyncio.Queue. Before digging deeper on the implementation of program with GUI, it is necessary to explain what coroutine and asyncio.Queue are. 
+To consummate the application, it is necessary to design the GUI for the gesture recognition. To make the GUI operatable, the whole programming structure of the previous two modes needs to be restructured since they are not well-organized, and the processes are not running concurrently but sequentially. During the reconstruction, coroutines and asyncio queue are the key components of the concurrency. However, what are they?
 
-Coroutine declared with the async/await syntax is the preferred way of writing asyncio application. By adding the async syntax in front of the def syntax, that function would become asynchronous function and is capable to use await() function to wait for certain kind of action. 
+- Coroutines can be entered, exited, and resumed at many different points. They can be implemented with the async def statement. 
+<br>
 
-Asyncio queue, which is a FIFO queue, is designed to be used in async/await code with different useful functions. The put(item) function allows the asynchronous functions to put an item into the queue. If the queue is full, the function will wait until a free slot is available before putting a new item into it. Also, the get() function permit the asynchronous functions to remove and return an item from the queue. If the queue is empty, that function will wait until an item is available in the list. In short, the asyncio queue provide a channel for the asynchronous functions to exchange the items. 
+- Asyncio queue, which is a FIFO queue, is designed to be used in async/await code with different useful functions. The put(item) function allows the asynchronous functions to put an item into the queue. If the queue is full, the function will wait until a free slot is available before putting a new item into it. Also, the get() function permit the asynchronous functions to remove and return an item from the queue. If the queue is empty, that function will wait until an item is available in the list. In short, the asyncio queue provide a channel for the asynchronous functions to exchange the items. 
+
+
+With the basic understanding of the coroutine and queue, it is time to discuss the design blue print of the program with GUI. The idea is basically dividing the program into five asynchronous functions which are main(), capture(), keepget(), processing() and prediction().
+
+<br>
+
+```python
+async def main():
+    ... (more details on the source codes)
+
+    capimg = asyncio.Queue()
+    samples = asyncio.Queue()
+    processed = asyncio.Queue()
+    rgbImg = asyncio.Queue()
+
+    await asyncio.gather(
+        capture(capimg, root, photocanvas),
+        keepget(capimg, samples),
+        processing(samples, processed),
+        prediction(processed, rgbImg, root, textcanvas, textArea),
+    )
+```
+In the main() function, there are four created asyncio queues used for transferring items. They will be parameters passed to the other asynchronous functions. Besides, the asyncio.gather() will run capture(), keepget(), processing() and prediction() concurrently inside the main(). To conclude, main() acts as a kick starter of the program.
+
+
+```python
+async def capture(queue, win, canvas):
+    # cap = acapture.open(0)
+    cap = cv2.VideoCapture(0)
+    # ret, frame = cap.read()
+
+    while True:
+        ret, frame = cap.read()
+        rgb = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        filpedRGB = cv2.flip(rgb, 1)
+        # print("capture")
+        photo = PIL.ImageTk.PhotoImage(image = PIL.Image.fromarray(filpedRGB))
+        canvas.create_image(0, 0, image=photo, anchor=tkinter.NW)
+        win.update()
+        await queue.put(rgb)
+        await asyncio.sleep(0.00001)
+```
+
+
+
+
 
 
 
