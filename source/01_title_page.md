@@ -28,7 +28,7 @@ and add the centred logo
         \vspace{0.5cm}
         
         \Large
-        LEE Tai Chung, Tim
+        Kwan Ying Kin, Tom
         \end{center}
 
         \vspace{0.5cm}
@@ -61,7 +61,7 @@ and add the centred logo
 
         \normalsize
         \textbf{
-            April, 2020
+            April, 2021
         }
 
         % \vfill

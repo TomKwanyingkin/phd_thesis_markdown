@@ -1,32 +1,49 @@
-# Literature review, with maths
+# Application Overview
 
-<!--
-After the introductory chapter, it seems fairly common to 
-include a chapter that reviews the literature and 
-introduces methodology used throughout the thesis.
--->
+## Overview of the physical product:
+<center>
+<img  src="https://github.com/TomKwanyingkin/hiuraunt/blob/main/Picture4.png?raw=true"  /><br>
+Fig.3 Broken Buttons </center>
 
-## Introduction
+## Hardware Setting:
 
-This is the introduction. Duis in neque felis. In hac habitasse platea dictumst. Cras eget rutrum elit. Pellentesque tristique venenatis pellentesque. Cras eu dignissim quam, vel sodales felis. Vestibulum efficitur justo a nibh cursus eleifend. Integer ultrices lorem at nunc efficitur lobortis.
+1. Raspberry Pi with 8GB RAM
+<center>
+<img  src="https://raw.githubusercontent.com/TomKwanyingkin/hiuraunt/main/Picture5.png"  /><br>
+Fig.4 Broken Buttons </center>
 
-## The middle
+ - It operates the hand gesture recognition program and control the
+   monitor and the webcam
 
-This is the literature review. Nullam quam odio, volutpat ac ornare quis, vestibulum nec nulla. Aenean nec dapibus in mL/min^-1^. Mathematical formula can be inserted using Latex:
 
-(@ref_for_eqn1) $f(x) = ax^3 + bx^2 + cx + d$
+2. Monitor
+<center>
+<img  src="https://raw.githubusercontent.com/TomKwanyingkin/hiuraunt/main/Picture6.png"  /><br>
+Fig.5 Monitor </center>
 
-Nunc eleifend, ex a luctus porttitor, felis ex suscipit tellus, ut sollicitudin sapien purus in libero. Nulla blandit eget urna vel tempus. Praesent fringilla dui sapien, sit amet egestas leo sollicitudin at.  
+ - The resolution of the monitor is 800*480.
+ - It shows the recognized result and the captured image from the
+   webcam.
 
-Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Sed faucibus pulvinar volutpat. Ut semper fringilla erat non dapibus. Nunc vitae felis eget purus placerat finibus laoreet ut nibh.
+  
+3. Logitech Brio Webcam
+<center>
+<img  src="https://github.com/TomKwanyingkin/hiuraunt/blob/main/Picture9.png?raw=true"  /><br>
+Fig.6 Web-camera</center>
 
-## Conclusion
+ - It can deliver 4K resolution with 30 fps and 1080p with 60 fps.
+ - It keeps capturing the internal surrounding of the elevator.
+ - The webcam can be placed in two different position depends on the
+   requirements of users. If the webcam is placed on the top
 
-This is the conclusion. Donec pulvinar molestie urna eu faucibus. In tristique ut neque vel eleifend. Morbi ut massa vitae diam gravida iaculis. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.
 
-<!-- Insert an unordered list -->
 
-- first item in the list
-- second item in the list
-- third item in the list
+ 
+  
 
+## System Architecture:
+
+Flow chart: 
+<center>
+<img  src="https://github.com/TomKwanyingkin/hiuraunt/blob/main/Picture8.png?raw=true"  /><br>
+Fig.7 Flow chart</center>

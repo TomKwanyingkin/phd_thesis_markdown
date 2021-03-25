@@ -1,37 +1,31 @@
-# Introduction, with a citation
+# Introduction
 
-## Background
+## Background:
 
-This is the introduction. Quisque finibus aliquet cursus. Integer in pellentesque tellus. Duis eu dignissim nulla, a porttitor enim. Quisque vehicula leo non ultrices finibus. Duis vehicula quis sem sit amet sollicitudin. Integer neque est, pharetra et auctor vel, iaculis interdum lectus.
+### Deep learning models:
 
-<!-- 
-To include a reference, add the citation key shown in the references.bib file.
--->
+Basically, deep learning models are artificial neural networks which can imitate the workings of the human brain in processing data and creating patterns for use in decision making and recognition. It can be well presented in a directed acyclic graph as shown as fig.1. Since a large and deep neural network has many layers and nodes in each layers, there will be numerous parameters need to be updated and tuned. Therefore, deep learning is gaining more and more popularity due to the Big Data and the existence of more powerful computers.
 
-To include a citation to the text, just add the citation key shown in the references.bib file. The style of the citation is determined by the ref_format.csl file. For example, in The Living Sea you can find pictures of the Calypso [@Cousteau1963].
+<center>
+<img src="https://user-images.githubusercontent.com/56287097/112454163-5fafd580-8d93-11eb-9cd2-23b825f0d382.png" /><br>
+Fig.1 A three-layer Neural Networks (NN)</center>
 
-In neque mauris, maximus at sapien a, iaculis dignissim justo. Aliquam erat volutpat. Praesent varius risus auctor est ultricies, sit amet consequat nisi laoreet. Suspendisse non est et mauris pharetra sagittis non porta justo. Praesent malesuada metus ut sapien sodales ornare.
-
-## The middle bit
-
-This is the middle bit. Phasellus quis ex in ipsum pellentesque lobortis tincidunt sed massa. Nullam euismod sem quis dictum condimentum. Suspendisse risus metus, elementum eu congue quis, viverra ac metus. Donec non lectus at lectus euismod laoreet pharetra semper dui. Donec sed eleifend erat, vel ultrices nibh. Nam scelerisque turpis ac nunc mollis, et rutrum nisl luctus.
-
-Duis faucibus vestibulum elit, sit amet lobortis libero. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. Sed at cursus nibh. Sed accumsan imperdiet interdum. Proin id facilisis tortor. Proin posuere a neque nec iaculis. Suspendisse potenti. Nullam hendrerit ante mi, vitae iaculis dui laoreet eu.
-
-Cras eleifend velit diam, eu viverra mi volutpat ut. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec finibus leo nec dui imperdiet, tincidunt ornare orci venenatis. Maecenas placerat efficitur est, eu blandit magna hendrerit eu.
-
-### Subsection of the middle bit
-
-This is a subsection of the middle bit. Quisque sit amet tempus arcu, ac suscipit ante. Cras massa elit, pellentesque eget nisl ut, malesuada rutrum risus. Nunc in venenatis mi. Curabitur sit amet suscipit eros, non tincidunt nibh. Phasellus lorem lectus, iaculis non luctus eget, tempus non risus. Suspendisse ut felis mi.
-
-## Summary of chapters
-
-<!-- 
-For italic, add one * on either side of the text
-For bold, add two * on either side of the text
-For bold and italic, add _** on either side of the text
--->
-
-This is a brief outline of what went into each chapter. **Chapter 1** gives a background on duis tempus justo quis arcu consectetur sollicitudin.  **Chapter 2** discusses morbi sollicitudin gravida tellus in maximus.  **Chapter 3** discusses vestibulum eleifend turpis id turpis sollicitudin aliquet.  **Chapter 4** shows how phasellus gravida non ex id aliquet. Proin faucibus nibh sit amet augue blandit varius.
+### Convolutional Neural Networks
+s
+The Convolutional Neural Networks (CNNs) is one of the deep learning models mainly deal with the image classification which will be implemented in the project. It is a type of feed-forward neural networks as illustrate in fig.2. The working principle of it is automatically learning and extracting features from the raw image data inputs in the training datasets. In each epoch, the network will do the forward calculation to calculate the output. Then, the loss calculation will be done to obtain the difference between the ground-truth output which is label and the calculated output. Based on the difference, the backward propagation can be done to optimize the parameter. If the datasets are sufficient, the output will be very precise.
 
 
+<center>
+<img src="https://user-images.githubusercontent.com/56287097/112454391-98e84580-8d93-11eb-8744-7ea0e5ec5350.jpg" /><br>
+Fig.2 Architecture of CNNs</center>
+
+
+## Objectives:
+
+Covid-19 has been associated with more than millions deaths worldwide due to its easy and multi-way spreading. It was found that Covid-19 can be attached to surfaces like elevator buttons and be transferred through contact. In light of this, the public would try to use key, or sharp object to press the elevator buttons. Therefore, it is always observed that the plastic coating is torn as shown in the fig.3. The buttons can be damaged easily. In short, it seems that the traditional procedure of taking a lift which is pressing the buttons is outdated and is necessary to be replaced.
+
+<center>
+<img src="https://raw.githubusercontent.com/TomKwanyingkin/hiuraunt/main/Picture3.png" /><br>
+Fig.3 Broken Buttons </center>
+<br>
+In light of this, the project is designed to develop and establish a system applying the gesture recognition technology, so that it enables users can take the elevator to any floors without contacting with the buttons. What they need to do is just making the hand gestures that represents the floor number. After a few seconds, the system will recognize the hand gestures of a single user or even multiple users and take them to the final destination. This way, the chance of spreading virus would be greatly reduced due to its zero-contact design. Even though the pandemic is over, the conveniences and innovation of this application can be still implemented in the shopping mall since the brad-new interaction with an elevator is appealing to customers.
