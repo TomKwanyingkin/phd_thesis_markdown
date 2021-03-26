@@ -216,7 +216,6 @@ if (count == 4):
 else:
     continue
 ```
-
 Since the speed of capturing a frame is much faster than that of processing of a frame, the hands.process() function would process every fourth frame to get the recognized result (Fig. 20). By so doing, the latency can be reduced, and the results would be more updated and catch up the current frame. 
 
 The attribute “results” will store the output from the hands.process() function. It is composed by multi_handedness and multi_hand_landmarks. The multi_handedness is a collection of handedness of the detected hands. It contains a score and a label for each hand (Fig.15). The label will indicate whether the hand is left or right while the score is the estimated probability of the handedness. The multi_hand_landmarks is a collection of detected/tracked hands, where each hand is represented as a list of 21 hand landmarks and each landmark is composed of x, y ,and z (Fig.16).
@@ -228,7 +227,6 @@ The attribute “results” will store the output from the hands.process() funct
 <br>
 <p>Fig.15 multi_handedness    Fig.16 multi_hand_landmarks</p></center>
 
-
 With a list of twenty-one hand landmarks of each hand, it is easy to know which finger is extending or touching the palm by using multiple if-statements to do the comparison of x and y position of each landmark. 
 
 <center>
@@ -236,9 +234,9 @@ With a list of twenty-one hand landmarks of each hand, it is easy to know which 
 <br>
 Fig.17 The document of annotation</center>
 
-For instance, when a user raises up his/her index finger to represent the first floor. The y-position of landmark[7] would be smaller than that of landmark[8]. As the middle finger is still touching the palm, the y-position of landmark[12] would be larger than that of landmark[9]. By knowing each status of each finger, the hand gesture made by the user can be distinguished and the corresponding floor number will be obtained.
+For instance, when a user raises up his/her index finger to represent the first floor. The y-position of landmark[7] would be larger than that of landmark[8]. As the middle finger is still touching the palm, the y-position of landmark[12] would be larger than that of landmark[9]. By knowing each status of each finger, the hand gesture made by the user can be distinguished and the corresponding floor number will be obtained.
 
-However, this is still not the end of the program. In order to ensure the recognized result is accurate and prevent the users making wrong hand gestures, it is necessary for the user to hold up his/her hand gesture for around 6 seconds. This can be achieved by the following codes.
+However, this is still not the end of the program. In order to ensure the recognized result is accurate, it is necessary for the user to hold up his/her hand gesture for around 6 seconds. This can prevent the program from recognizing the hand gesture when a user is not ready.  The following code can achieve the similar effect. 
 ```python
 
 resultsList.append(int(result))
@@ -262,10 +260,9 @@ if (wholeLoop == 25):
     wholeLoop = 0
     resultsList = []
 ```
+As you can see, a resultList will be created for storing the recognized result for 25 times. If one of the result exist over 9 times, that result will be confirmed and printed out in the terminal to simulate sending signal to the elevator.
 
-A resultList will be created for storing the recognized result for 25 times. If one of the result exist over 9 times, that result will be confirmed and printed out in the terminal to simulate sending signal to the elevator and then one loop finishes. The coding of this mode ends here. 
-
-In the real world, the user in the lift just need to make and hold the hand gesture for 6 seconds in front of the camera in the position shown in fig.18. The above program will recognize the hand gesture and bring the user to that floor.
+The coding of this mode ends here. On the other hand, in the real world, the user in the lift needs to make and holds the hand gesture for 6 seconds in front of the camera in the position shown in fig.18. The above program will recognize the hand gesture and bring the user to that floor.
 
 <center>
 <img  src="https://github.com/TomKwanyingkin/hiuraunt/blob/main/Picture22.png?raw=true" />
@@ -286,8 +283,7 @@ Imagine that there are two or more users are using the elevator. Although the pr
 <br>
 Fig.20 The mirror image of Multiple hands of two users</center>
 <br>
-
-In other words, it is not capable to gather the recognized results of Tom’s each hand to output 55th floor when there are multiple hands in one frame as shown in fig.27. The recognized result of Tom’s right hand may be combined with that of Ernest’s left hand. As a result, the elevator may go to  65th undesired location. Based on the above, multi-users’ hand gestures recognition mode will be designed for recognizing all the hands at once. To achieve this, various methods has been considered.
+In other words, it is not capable to gather the recognized results of Tom’s each hand to output 55th floor when there are multiple hands in one frame as shown in fig.27. The recognized result of Tom’s right hand may be randomly combined with that of Ernest’s left hand. As a result, the elevator may go to 65th undesired location. Based on the above, multi-users’ hand gestures recognition mode will be designed for recognizing all the hands at once. To achieve this, various methods has been considered.
 
 The first approach that comes out my mind is k-means clustering. The k-means clustering aims to partition n data into k clusters in which each data belongs to the cluster with the nearest mean.
 
@@ -296,14 +292,14 @@ The first approach that comes out my mind is k-means clustering. The k-means clu
 <br>
 Fig.21 K-means clustering</center>
 <br>
-Inputting the landmark positions of the multiple hands into the k-means clustering algorithm, the output would be like the Fig.29. 
+Inputting the landmark positions of the multiple hands into the k-means clustering algorithm, the output would be like the Fig.29. The cluster 1 groups the landmarks of Tom together while the cluster 2 groups the landmarks of Ernest together.
 
 <center>
 <img  src="https://github.com/TomKwanyingkin/hiuraunt/blob/main/Picture26.png?raw=true" />
 <br>
 Fig.22 K-means clustering</center>
 <br>
-It seems that k-means clustering algorithm is able to tackle the obstacles and help the program to group the results. However, if Tom’s left hand is closer to Mike’s right hand, they will form an  cluster(Fig.23). The cluster would combine the result of Tom’s left hand and Mike’s right hand leading to incorrect result. As a consequence, k-means clustering is not the one we need.
+It seems that k-means clustering algorithm is able to tackle the obstacles and help the program to group the results. However, if Tom’s left hand is close to Mike’s right hand, they will form an undesired cluster(Fig.23). It would combine the result of Tom’s left hand and Mike’s right hand leading to an incorrect result. In light of this, k-means clustering is not the method we want. 
 
 <center>
 <img  src="https://github.com/TomKwanyingkin/hiuraunt/blob/main/Picture27.png?raw=true" />
@@ -316,7 +312,7 @@ The second approach is training an extra CNN model to identify and recognize who
 <br>
 Fig.24 Expected output of Fast R-CNN </center>
 <br>
-It can be seen that the predicted joints will link up user’s body and arms, so that it would help the program to indicate which hands belong to which user. Also, one crucial fact is that the CNN model can solve the obstacle faced by the k-means clustering algorithm (Fig.30). No matter how close the hands of the other users, the recognized result will not be affected if the model is robust. Based on the above, it is guaranteed that the performance and the accuracy will be the best among most of the solutions. Unfortunately, it is expected the model will require an enormous amount of data and annotation. The preparation time would consume lots of time, so this approach will be denied. 
+It can be seen that the predicted joints will link up user’s body and arms, so that it would help the program to indicate which hands belong to which user. Also, one crucial fact is that the CNN model can solve the obstacle faced by the k-means clustering algorithm (Fig.23). No matter how close the hands of the users, the recognized result will not be affected if the model is robust. Based on the above, it is guaranteed that the performance and the accuracy will be the best among most of the solutions. Unfortunately, it is expected the model will require an enormous amount of data and annotation. The preparation time would consume lots of time, so this approach will be denied for this porject. 
 <br>
 <br>
 The last suggested method will be the quick-sort algorithm. Quick sort is a divide and conquer algorithm. It picks an element as pivot and partitions the given array around the picked pivot. In the multi-users’ hand gestures recognition mode, it will be used to sort multiple hands of users starting from y-coordinate to x-coordinate based on the coordinates of their thumbs. For easy understanding, an example will be given.
@@ -325,7 +321,7 @@ The last suggested method will be the quick-sort algorithm. Quick sort is a divi
 <br>
 Fig.25 Expected result of k-means clustering</center>
 <br>
-In the fig.25, there are different coordinates of different landmarks on various users’ hands. Remember that the outputs of MediaPipe model which are multi_handedness list (fig.21) and multi_hand_landmarks list (fig.22)  are separated. That means it is hard to know whether the landmark (x=1, y=2) belongs to left hand or right hand. Thus, a dictionary will be created first in this mode to connect the list of landmarks and its corresponding handedness. 
+In the fig.25, there are different coordinates of different landmarks on various users’ hands. Remember that the outputs of MediaPipe model which are multi_handedness list (fig.15) and multi_hand_landmarks list (fig.16)  are separated. That means it is hard to know whether the landmark (x = 1, y = 2) belongs to left hand or right hand. Thus, a dictionary will be initialized in this mode to connect the list of landmarks and its corresponding handedness. 
 ```python
 # Create a dictionary to store two keys for combining the output of MediaPipe  
 for i in range(0, len(results.multi_handedness)):
@@ -348,22 +344,22 @@ def sortXY(item1, item2):
         return 0
 ```
 <br>
-After that, a sorted_list would be returned by sortXY. It would be like 
+After that, a sorted_list would be returned by sortXY. It would be like: 
 
-[{“handedness”: left, “landmarks”: all the landmarks of Tom’s left hand},
- {“handedness”: right, “landmarks”: all the landmarks of Tom’s right hand},
- {“handedness”: left, “landmarks”: all the landmarks of Ernest’s left hand},
- {“handedness”: right, “landmarks”: all the landmarks of Ernest’s right hand},]. 
+    [{“handedness”: left, “landmarks”: all the landmarks of Tom’s left hand},
+     {“handedness”: right, “landmarks”: all the landmarks of Tom’s right hand},
+     {“handedness”: left, “landmarks”: all the landmarks of Ernest’s left hand},
+     {“handedness”: right, “landmarks”: all the landmarks of Ernest’s right hand},]
 
-Remember that this approach will not know the landmarks belongs to whom, the order of the list just depends on  x, y coordinate. The above list is just for easy illustration. 
+Remember that this approach will not know the landmarks belongs to whom, the order of the list just depends on  x, y coordinate. The above list is for easy understanding and illustration. 
 
-Since the floor number can be obtained by knowing the landmarks of each hand, detectedRlist will be created and like:
+Since the floor number can be obtained by knowing the landmarks of each hand using multiple if-statments, detectedRlist will be produced and like:
 
-[{“handedness”: left, “gesture”: 5},
-{“handedness”: right, “gesture”: 5},
-{“handedness”: left, “gesture”: 6},
-{“handedness”: right, “gesture”: 0},].
-
+                            [{“handedness”: left, “gesture”: 5},
+                             {“handedness”: right, “gesture”: 5},
+                             {“handedness”: left, “gesture”: 6},
+                             {“handedness”: right, “gesture”: 0},]
+<br>
 The final step would be combining the gesture in the detectedRlist like the following code. Inside the while loop, there are two if-statements. The first if-statement is to check the length of detectedRlist is larger than 1 not. If not, the detectedRlist[0][ “gesture”] will be the result directly. The second if-statement is checking whether the detectedRlist[0] [ “handedness”] equals to “left” and the detectedRlist[1] [ “handedness”] equals to “right”. If yes, they would combine as a result of floor and pop out. Otherwise, the detectedRlist[0][“ gesture”] would be the result alone. 
 ```python
 # printing result to simulate the outputting process
@@ -413,9 +409,9 @@ In conclusion, it is proven that the implementation of quick-sort method can dea
 
 #### The implementation of MediaPipe (GUI version): 
 
-To consummate the application, it is necessary to design the GUI for the gesture recognition. To make the GUI operatable, the whole programming structure of the previous two modes needs to be restructured since they are not well-organized, and the processes are not running concurrently but sequentially. During the reconstruction, coroutines and asyncio queue are the key components of the concurrency. However, what are they?
+To consummate the application, it is necessary to design the GUI for the gesture recognition. To make the GUI operatable, the whole programming structure of the previous two modes needs to be restructured since they are not well-organized, and the processes are not running concurrently but sequentially. During the reconstruction, coroutines and asyncio queue will be applied to accomplish the concurrency. However, what are they?
 
-- Coroutines can be entered, exited, and resumed at many different points. They can be implemented with the async def statement. 
+- Coroutines is a kind of subroutine. They can be entered, exited, and resumed at many different points. Also, they can be implemented with the async def statement. 
 <br>
 
 - Asyncio queue, which is a FIFO queue, is designed to be used in async/await code with different useful functions. The put(item) function allows the asynchronous functions to put an item into the queue. If the queue is full, the function will wait until a free slot is available before putting a new item into it. Also, the get() function permit the asynchronous functions to remove and return an item from the queue. If the queue is empty, that function will wait until an item is available in the list. In short, the asyncio queue provide a channel for the asynchronous functions to exchange the items. 
@@ -441,7 +437,7 @@ async def main():
         prediction(processed, rgbImg, root, textcanvas, textArea),
     )
 ```
-In the main() function, there are four created asyncio queues used for transferring items. They will be parameters passed to the other asynchronous functions. Besides, the asyncio.gather() will run capture(), keepget(), processing() and prediction() concurrently inside the main(). To conclude, main() acts as a kick starter of the program.
+In the main() function, there are four created asyncio queues used for transferring items. They will be parameters passed to the certain asynchronous functions. Besides, the asyncio.gather() will run capture(), keepget(), processing() and prediction() concurrently. To conclude, main() acts as a kick starter of the program.
 
 <br>
 ```python
@@ -473,8 +469,8 @@ async def keepget(q1, q2):
         await q2.put(rgb)
         await asyncio.sleep(0.00001)
 ```
-The asynchronous function keepget() will non-stop get the rgb from the shared queue q1 
-whenever the capture() puts the rgb into the q1. Then, it will pass the rgb to the processing(). In short, keepget() is like a transfer station. 
+The asynchronous function keepget() will non-stop get a rgb from the shared queue q1 
+whenever the q1 is not empty. Then, it will pass the rgb to the processing(). In short, keepget() performs as a transfer station. 
 <br>
 
 ```python
@@ -491,18 +487,82 @@ async def processing(q2, q3):
         rgb = await q2.get()
 
         results = hands.process(cv2.flip(rgb,1))
-
-        unsortedList.append({'image': rgb,'hands':[{'classification':{'label':h.classification[0].label, 'index':h.classification[0].index}, 'floor':getGesture(h.classification[0].label, l.landmark), 'landmark':l.landmark[4]} for h, l in zip(results.multi_handedness, results.multi_hand_landmarks)]})
+        unsortedList.append({'image': rgb,'hands':[{'classification':{'label':h.classification[0].label, 'index':h.classification[0].index}, 'gesture':getGesture(h.classification[0].label, l.landmark), 'landmark':l.landmark[4]} for h, l in zip(results.multi_handedness, results.multi_hand_landmarks)]})
 
         await q3.put(unsortedList)
-
         await asyncio.sleep(0.00001)
 ```
-In the processing() function, it will immediately pass the rgb gotten from the queue to the MediaPipe model to get the multi_handedness and multi_hand_landmarks. Also, in order to make the life easier, a unsortedList will be created. It stores the rgb frame, left or right hand, floor and the x, y, z coordinate of landmark[4]. The floor is the return value of getGesture() function. The logic of getGesture() is similar to the coding we mentioned before. It utilizes the multi_hand_landmarks to know the status of each fingers and then predict the floor number. 
+In the processing() function, it will immediately pass the rgb gotten from the queue  to the MediaPipe model to get the multi_handedness and multi_hand_landmarks. Also, to make the life easier, a unsortedList will be created to make all the things are connected and dependent. It will store the rgb frame, left or right hand, floor and the x, y, z coordinate of landmark[4]. The gesture is the return value of getGesture() function. The logic of getGesture() is similar to the coding we discussed before. It utilizes the multi_hand_landmarks to know the status of each fingers and then output the floor number. In the end, the processing() will send the unsortedList to prediction() for further prediction. 
+<br>
+```python
+async def prediction(q3, q4, win, textcanvas, textArea):
+    ...
+    while True:
+        unsortedList = await q3.get()
 
-The processing() will send the unsortedList to prediction() for further prediction. 
+        if type(unsortedList) is list and len(unsortedList) > 0:
+            await q4.put(unsortedList[0]['image'])
+            sortedList = sorted(unsortedList[0]['hands'], key = cmp_to_key(sortXY))
+            result = outputResult(sortedList)
+            stack.append(result)
 
-For instance, 
+        # verification
+        if(len(stack) == 5):
+            result1 = stack.pop()
+            result2 = stack.pop()
+            result3 = stack.pop()
+            result4 = stack.pop()
+            result5 = stack.pop()
+            if(result1 == result2 == result3 == result4 == result5):
+                finalR = result1
+                
+        # GUI Design
+        textcanvas.itemconfig(textArea, text = list_of_floor)
+        await asyncio.sleep(0.00001)
+```
+The prediction() function responsibles for predicting the floor number by using the unsortedList gotten from processing(). The quick-sort discussed in the last mode will be adopted here too. It will sort the unsortedList by the value of attribute 'landmark' that we define in the processing(). Then, the sortedList will be the parameter of outputResult() function. The logic outputResult() function is the same as the final step of the last mode. It will follow the sequence of the sortedlist to combine the the floor number represented by the hand gestures.
+
+Regard the verification, a stack is used to store five results. The working principle 
+here is that when a user hold his/her hand gesture for a few seconds, there will be multiple same results produced in the upper part of prediction(). If all of them are consistent and same, the predicted results will be accurate and the system will display that final result in the GUI. 
+
+
+
+
+
+<br>
+
+
+```python
+... (Basic setting and more details on the source code)
+
+def sortXY(item1, item2):
+def getGesture(label, landmarks):
+def outputResult(sortedList):
+
+async def capture(q1, win, canvas):
+
+async def processing(q2, q3):
+
+async def prediction(q3, q4, win, textcanvas, textArea):
+
+async def keepget(q1, q2):
+
+async def main():
+
+asyncio.run(main())
+```
+This is the overview of the implementation of MediaPipe (GUI version). It is well organized now. 
+<br>
+
+
+
+
+
+
+
+
+
+
 
 
 
